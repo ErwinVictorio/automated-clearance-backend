@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use PHPUnit\Metadata\Version\Requirement;
 
 class User extends Authenticatable
 {
@@ -31,6 +32,20 @@ class User extends Authenticatable
     ];
 
 
+    public function requirments()
+    {
+
+        return $this->hasMany(Requirement::class, 'teacher_id');
+    }
+
+
+    public function announcement(){
+        
+        return $this->hasMany(Annoucement::class,'teacher_or_office_id');
+    }
+
+
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -53,5 +68,6 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+        
     }
 }

@@ -13,12 +13,9 @@ return new class extends Migration
     {
         Schema::create('annoucements', function (Blueprint $table) {
             $table->id();
-            $table->string('teacher_office_name');
+            $table->string('title');
+             $table->string('message');
             $table->foreignId('teacher_or_office_id')->constrained('users')->onDelete('cascade');
-            $table->string('annoucement');
-            $table->string('section');
-            $table->string('year_level');
-            $table->string('status')->default('Pending');
             $table->timestamps();
         });
     }

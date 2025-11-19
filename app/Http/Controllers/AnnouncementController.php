@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Annoucement;
 use Illuminate\Http\Request;
-use App\Models\Subject;
+use Illuminate\Support\Facades\Auth;
 
-class SubjectController extends Controller
+class AnnouncementController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,16 +15,19 @@ class SubjectController extends Controller
     {
         //
         try {
-            $subjectList =  Subject::pluck('subject_name');
+            $annoucements = Annoucement::with('User')->get();
 
-            return response([
-                'success' => true,
-                'data' => $subjectList
-            ]);
+            if ($annoucements) {
+
+                return response()->json([
+                    'success' => true,
+                    'announcement' => $annoucements
+                ]);
+            }
         } catch (\Throwable $th) {
-            return response([
+            return response()->json([
                 'success' => false,
-                'data' => $th->getMessage()
+                'message' => $th->getMessage()
             ]);
         }
     }
@@ -33,22 +37,29 @@ class SubjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $teacherId = Auth::user()->id;
+
         try {
-            $validated =  $request->validate([
-                'Subject_name' => 'required|unique:Subject'
+            $validated = $request->validate([
+                'title' => 'required|min:3',
+                'message' => 'required|min:5',
             ]);
 
-            Subject::create($validated);
+            Annoucement::create([
+                'title' => $validated['title'],
+                'message' => $validated['message'],
+                'teacher_or_office_id' => $teacherId
+            ]);
 
             return response()->json([
                 'success' => true,
-                'message' => " New subject is Successfully Created"
+                'message' => "$validated[title] is successfully created"
             ]);
         } catch (\Throwable $th) {
             return response()->json([
-                'success' => false,
-                'error' => $th->getMessage()
+                'success' => true,
+                'message' => $th->getMessage()
             ]);
         }
     }

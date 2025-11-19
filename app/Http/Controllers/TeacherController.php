@@ -16,30 +16,53 @@ class TeacherController extends Controller
         $search = $request->query('search');
 
         try {
-            
-             $teacher = User::where('role', '1')
-            ->when($search, function ($query) use ($search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('full_name', 'like', "%{$search}%")
-                      ->orWhere('section', 'like', "%{$search}%");
-                });
-            })
-            ->paginate(10);
+
+            $teacher = User::where('role', '1')
+                ->when($search, function ($query) use ($search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('full_name', 'like', "%{$search}%")
+                            ->orWhere('section', 'like', "%{$search}%");
+                    });
+                })
+                ->paginate(10);
 
             if ($teacher) {
                 return response()->json([
-                   'success' => true,
-                     'teacher' => $teacher
+                    'success' => true,
+                    'teacher' => $teacher
                 ]);
             }
-
         } catch (\Throwable $th) {
             return response()->json([
-                   'success' => false,
-                     'error' => $th->getMessage()
-                ]);
+                'success' => false,
+                'error' => $th->getMessage()
+            ]);
         }
+    }
 
+
+    public function showTeacherName()
+    {
+
+        try {
+            $teacher =  User::select('full_name', 'course', 'section')->where('role', '1')->get();
+
+            if ($teacher) {
+                return response()->json([
+                    'success' => true,
+                    'teacher' => $teacher
+                ]);
+            }
+            return response()->json([
+                'success' => false,
+                'message' => 'No Teacher Found'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => true,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -47,7 +70,6 @@ class TeacherController extends Controller
      */
     public function store(Request $request)
     {
-        //
 
         try {
             $validated =  $request->validate([
@@ -79,7 +101,7 @@ class TeacherController extends Controller
             return response([
                 'success' => false,
                 'error' => $th->getMessage()
-            ],500);
+            ], 500);
         }
     }
 

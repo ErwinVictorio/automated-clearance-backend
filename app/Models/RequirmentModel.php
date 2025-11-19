@@ -8,10 +8,19 @@ class RequirmentModel extends Model
 {
     //
 
-  protected  $fillable = [
+    protected  $table='requirements';
 
+     protected  $fillable = [
+       'title',
+       'detail',
+       'subject',
+       'teacher_id'
     ];
 
-        
+
+    public function teacher(){
+
+        return $this->belongsTo(User::class,'teacher_id');
+    }
 
 }

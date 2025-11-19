@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('full_name');
             $table->string('course')->nullable();
             $table->string('section')->nullable();
-            $table->string('subject')->nullable();
             $table->integer('role')->default(2);
             $table->string('username');
             $table->string('password');
