@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('section');
             $table->string('course');
             $table->string('drive_link')->nullable();
+            $table->foreignId('student_id')->constrained('users')->onDelete('cascade');
             $table->string('image')->nullable();
             $table->string('status')->default('Pending');
             $table->timestamps();

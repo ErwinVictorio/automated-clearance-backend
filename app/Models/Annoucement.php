@@ -20,6 +20,4 @@ class Annoucement extends Model
         return $this->belongsTo(User::class,'teacher_or_office_id');
     }
 
-
-    
 }

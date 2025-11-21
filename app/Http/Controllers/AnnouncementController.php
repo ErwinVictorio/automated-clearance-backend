@@ -16,7 +16,6 @@ class AnnouncementController extends Controller
         //
         try {
             $annoucements = Annoucement::with('User')->get();
-
             if ($annoucements) {
 
                 return response()->json([
@@ -31,6 +30,8 @@ class AnnouncementController extends Controller
             ]);
         }
     }
+
+
 
     /**
      * Store a newly created resource in storage.

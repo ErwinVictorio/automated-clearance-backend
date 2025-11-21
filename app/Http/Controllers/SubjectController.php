@@ -28,6 +28,25 @@ class SubjectController extends Controller
         }
     }
 
+
+      public function ShowToAdmin()
+    {
+        //
+        try {
+            $subjectList =  Subject::all();
+
+            return response([
+                'success' => true,
+                'data' => $subjectList
+            ]);
+        } catch (\Throwable $th) {
+            return response([
+                'success' => false,
+                'data' => $th->getMessage()
+            ]);
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      */

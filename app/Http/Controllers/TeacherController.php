@@ -45,7 +45,7 @@ class TeacherController extends Controller
     {
 
         try {
-            $teacher =  User::select('full_name', 'course', 'section')->where('role', '1')->get();
+            $teacher =  User::select('full_name', 'course', 'section','id')->where('role', '1')->get();
 
             if ($teacher) {
                 return response()->json([

@@ -4,6 +4,7 @@ use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\RequirmentController;
+use App\Http\Controllers\RequirmentSubmitedController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherController;
 use Illuminate\Http\Request;
@@ -34,24 +35,29 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(functi
 
     // Subject
     Route::post('/create-subject', [SubjectController::class, 'store']);
-    Route::get('/list-subject', [SubjectController::class, 'index']);
+    Route::get('/list-subject', [SubjectController::class, 'ShowToAdmin']);
 });
 
 
 
 // Routes For Teacher
-Route::middleware(['auth:sanctum', 'role:teacher'])->prefix('teacher')->group(function(){
+Route::middleware(['auth:sanctum', 'role:teacher'])->prefix('teacher')->group(function () {
 
-    Route::get('/subjects',[SubjectController::class,'index']);
-    Route::post('/requirment',[RequirmentController::class,'store']);
-    Route::post('/create-announcement',[AnnouncementController::class,'store']);
-
+    Route::get('/subjects', [SubjectController::class, 'index']);
+    Route::post('/requirment', [RequirmentController::class, 'store']);
+    Route::post('/create-announcement', [AnnouncementController::class, 'store']);
+    Route::get('/annoucements-list', [AnnouncementController::class, 'index']);
+    Route::get('/requirments-list', [RequirmentController::class, 'index']);
 });
 
 
 //  For Student
-Route::middleware(['auth:sanctum','role:student'])->prefix('student')->group(function(){
+Route::middleware(['auth:sanctum', 'role:student'])->prefix('student')->group(function () {
 
-    Route::get('/teacher-list',[TeacherController::class,'showTeacherName']);
-    Route::get('/annoucements',[AnnouncementController::class,'index']);
+    Route::get('/teacher-list', [TeacherController::class, 'showTeacherName']);
+    Route::get('/annoucements', [AnnouncementController::class, 'index']);
+    Route::get('/requirment/{teacherId}', [RequirmentController::class, 'showByTeacherId']);
+    Route::post('/store-requirment', [RequirmentSubmitedController::class, 'store']);
+    Route::get('/requirments', [RequirmentController::class, 'index']);
+    Route::post('/submit-requirment',[RequirmentSubmitedController::class,'store']);
 });
