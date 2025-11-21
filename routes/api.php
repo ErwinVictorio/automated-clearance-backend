@@ -9,8 +9,7 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
-
+use Termwind\Components\Raw;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return response()->json([
@@ -60,4 +59,9 @@ Route::middleware(['auth:sanctum', 'role:student'])->prefix('student')->group(fu
     Route::post('/store-requirment', [RequirmentSubmitedController::class, 'store']);
     Route::get('/requirments', [RequirmentController::class, 'index']);
     Route::post('/submit-requirment',[RequirmentSubmitedController::class,'store']);
+   
+    //  sho the submited requirment by student
+    Route::get('/submited-requirment',[RequirmentSubmitedController::class, 'index']);
+    Route::delete('/delete-requirment/{id}',[RequirmentSubmitedController::class,'destroy']);
+
 });

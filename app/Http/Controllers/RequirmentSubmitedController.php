@@ -13,8 +13,39 @@ class RequirmentSubmitedController extends Controller
      */
     public function index()
     {
-        //
+        //  get the student id base on current login user
+        $student_id = Auth::user()->id;
+
+        try {
+            $submited_requirment = RequirmentSubmited::select(
+                'requestor_name',
+                'drive_link',
+                'image',
+                'status',
+                'course',
+                  'id'
+            )->where('student_id', $student_id)->orderBy('created_at', 'asc')->get();
+
+            if ($submited_requirment->count() > 0) {
+                return response()->json([
+                    'success' => true,
+                    'data' => $submited_requirment
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'No Data Available'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -32,7 +63,7 @@ class RequirmentSubmitedController extends Controller
                 'requestor_name' => 'required',
                 'section' => 'required',
                 'course' => 'required',
-                 'teacher_id' => 'required|integer',
+                'teacher_id' => 'required|integer',
                 'drive_link' => 'required',
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048' // optional, max 2MB
             ]);
@@ -40,20 +71,20 @@ class RequirmentSubmitedController extends Controller
 
             //  handle na image upload
             if ($request->hasFile('image')) {
-                $file = $request->file('image'); // get the uploaded file
+                $file = $request->file('image');
 
-                // Optional: generate a unique file name
                 $filename = time() . '_' . $file->getClientOriginalName();
 
-                // Store file in "storage/app/public/requirements"
+                // Save to storage/app/public/requirements
                 $path = $file->storeAs('requirements', $filename, 'public');
 
-                // Save the path in the database if needed
-                $validated['image'] = $path;
+                // Convert to URL
+                $validated['image'] = asset('storage/' . $path);
             }
 
 
-              RequirmentSubmited::create([
+
+            RequirmentSubmited::create([
                 'requestor_name' => $validated['requestor_name'],
                 'teacher_or_office' => $validated['teacher_id'],
                 'section' => $validated['section'],
@@ -71,7 +102,7 @@ class RequirmentSubmitedController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $th->getMessage()
-            
+
             ]);
         }
     }
@@ -97,6 +128,21 @@ class RequirmentSubmitedController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $requirment = RequirmentSubmited::findOrFail($id);
+
+            $requirment->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'successfully deleted'
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 }
