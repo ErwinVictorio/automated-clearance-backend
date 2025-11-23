@@ -14,6 +14,7 @@ class RequirmentModel extends Model
        'title',
        'detail',
        'subject',
+        'deadline',
        'teacher_id'
     ];
 

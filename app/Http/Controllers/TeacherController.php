@@ -126,11 +126,33 @@ class TeacherController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified resource.  
      */
     public function show(string $id)
     {
         //
+        try {
+            $result = User::from('users as teacher')
+                ->join('student_requirment_sub as submitedDoc', 'teacher.id', '=', 'submitedDoc.teacher_or_office')
+                ->where('teacher.id', $id)
+                ->select(
+                    'submitedDoc.requestor_name as student_name',
+                    'submitedDoc.status as status_of_request',
+                    'submitedDoc.course as section',
+                    'submitedDoc.drive_link as link',
+                    'submitedDoc.image as image',
+                )
+                ->get();
+            return response([
+                'success' => true,
+                'result' => $result
+            ]);
+        } catch (\Throwable $th) {
+            return response([
+                'success' => false,
+                'error' => $th->getMessage()
+            ], 500);
+        }
     }
 
     /**

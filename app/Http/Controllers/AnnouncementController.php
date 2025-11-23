@@ -46,6 +46,7 @@ class AnnouncementController extends Controller
                     'created_at'
                 )->get();
 
+
             return response()->json([
                 'success' => true,
                 'data' => $annoucement
@@ -93,6 +94,24 @@ class AnnouncementController extends Controller
     }
 
 
+    public function CounteTotalAnnouncementByTeacherId()
+    {
+
+        $teacherId = Auth::user()->id;
+
+        try {
+            $count = Annoucement::where('teacher_or_office_id', $teacherId)->count();
+            return response()->json([
+                'success' => true,
+                'counted' => $count
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => true,
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
 
 
 

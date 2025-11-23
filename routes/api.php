@@ -36,6 +36,8 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(functi
     Route::get('/list-subject', [SubjectController::class, 'ShowToAdmin']);
     Route::get('/total-subject', [SubjectController::class, 'TotalSibject']);
     Route::get('/total-teacher', [TeacherController::class, 'TotalTeacher']);
+
+    Route::get('/get-students-by-teacher/{id}',[TeacherController::class,'show']);
 });
 
 

@@ -61,14 +61,16 @@ class RequirmentController extends Controller
             $validated = $request->validate([
                 'requirment' => 'required|min:5',
                 'detail' => 'required|min:5',
-                'subject' => 'required'
+                'subject' => 'required',
+                'deadline' => 'required'
             ]);
 
             RequirmentModel::create([
                 'title' => $validated['requirment'],
                 'detail' => $validated['detail'],
                 'subject' => $validated['subject'],
-                'teacher_id' => $teacher
+                'teacher_id' => $teacher,
+                 'deadline' => $validated['deadline']
             ]);
 
             return response()->json([
