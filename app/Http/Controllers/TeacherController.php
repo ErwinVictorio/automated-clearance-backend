@@ -45,7 +45,7 @@ class TeacherController extends Controller
     {
 
         try {
-            $teacher =  User::select('full_name', 'course', 'section','id')->where('role', '1')->get();
+            $teacher =  User::select('full_name', 'course', 'section', 'id')->where('role', '1')->get();
 
             if ($teacher) {
                 return response()->json([
@@ -65,12 +65,32 @@ class TeacherController extends Controller
         }
     }
 
+
+
+
+    public function TotalTeacher()
+    {
+        try {
+            $counted = User::where('role', '1')->count();
+
+            return response()->json([
+                'success' => true,
+                'counted' => $counted
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+
+            ]);
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-
         try {
             $validated =  $request->validate([
                 'full_name' => 'required',

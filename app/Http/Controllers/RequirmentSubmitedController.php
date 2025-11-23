@@ -23,7 +23,7 @@ class RequirmentSubmitedController extends Controller
                 'image',
                 'status',
                 'course',
-                  'id'
+                'id'
             )->where('student_id', $student_id)->orderBy('created_at', 'asc')->get();
 
             if ($submited_requirment->count() > 0) {
@@ -36,6 +36,65 @@ class RequirmentSubmitedController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'No Data Available'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
+
+
+    public function showAll(Request $request)
+    {
+        $search = $request->query('search');
+        // get id of the current login teacher
+        $teacherId =  Auth::user()->id;
+
+        try {
+            $submited_requirment = RequirmentSubmited::select(
+                'requestor_name',
+                'drive_link',
+                'image',
+                'status',
+                'course',
+                'id'
+            )->when($search, function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('requestor_name', 'like', "%{$search}%")
+                        ->orWhere('course', 'like', "%{$search}%")
+                        ->orWhere('status', 'like', "%{$search}%");
+                });
+            })->where('teacher_or_office', $teacherId)
+                ->orderBy('created_at', 'asc')->paginate(10);
+
+
+            return response()->json([
+                'success' => true,
+                'data' => $submited_requirment
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
+
+    public function UpdateStatus(Request $request, string $id)
+    {
+
+        try {
+            $requirment = RequirmentSubmited::findOrFail($id);
+            $requirment->status = $request->status;
+            $requirment->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => "Status is updated to $requirment->status"
             ]);
         } catch (\Throwable $th) {
             return response()->json([
@@ -106,6 +165,10 @@ class RequirmentSubmitedController extends Controller
             ]);
         }
     }
+
+
+
+
 
     /**
      * Display the specified resource.

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Subject;
+use Illuminate\Support\Facades\Auth;
 
 class SubjectController extends Controller
 {
@@ -29,7 +30,7 @@ class SubjectController extends Controller
     }
 
 
-      public function ShowToAdmin()
+    public function ShowToAdmin()
     {
         //
         try {
@@ -46,6 +47,8 @@ class SubjectController extends Controller
             ]);
         }
     }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -71,6 +74,27 @@ class SubjectController extends Controller
             ]);
         }
     }
+
+
+
+    public function TotalSibject()
+    {
+        try {
+            $counted = Subject::count();
+
+            return response()->json([
+                'success' => true,
+                'counted' => $counted
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+
+            ]);
+        }
+    }
+
 
     /**
      * Display the specified resource.

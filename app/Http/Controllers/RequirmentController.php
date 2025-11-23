@@ -20,11 +20,32 @@ class RequirmentController extends Controller
                 'success' => true,
                 'requirments' => $requirements
             ]);
-            
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
                 'message' => $th->getMessage()
+            ]);
+        }
+    }
+
+    public function CounteTotalRequirmentByTeacherId()
+    {
+
+        //  ghet the current teacher Login
+        $teacherId = Auth::user()->id;
+
+        try {
+            $counted = RequirmentModel::where('teacher_id', $teacherId)->count();
+
+            return response()->json([
+                'success' => true,
+                'counted' => $counted
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+
             ]);
         }
     }
@@ -92,5 +113,19 @@ class RequirmentController extends Controller
     public function destroy(string $id)
     {
         //
+        try {
+            $list = RequirmentModel::findOrFail($id);
+
+            $list->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'successfully deleted'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 }

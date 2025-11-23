@@ -31,6 +31,33 @@ class AnnouncementController extends Controller
         }
     }
 
+    public function ShowByTeacherId()
+    {
+
+        // Get the current teacher Login
+        try {
+            $teacherId = Auth::user()->id;
+
+            $annoucement = Annoucement::where('teacher_or_office_id', $teacherId)
+                ->select(
+                    'title',
+                    'message',
+                    'id',
+                    'created_at'
+                )->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $annoucement
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
 
 
     /**
@@ -43,8 +70,8 @@ class AnnouncementController extends Controller
 
         try {
             $validated = $request->validate([
-                'title' => 'required|min:3',
-                'message' => 'required|min:5',
+                'title' => 'required',
+                'message' => 'required',
             ]);
 
             Annoucement::create([
@@ -64,6 +91,13 @@ class AnnouncementController extends Controller
             ]);
         }
     }
+
+
+
+
+
+
+
 
     /**
      * Display the specified resource.
@@ -87,5 +121,20 @@ class AnnouncementController extends Controller
     public function destroy(string $id)
     {
         //
+        try {
+            $list = Annoucement::findOrFail($id);
+
+            $list->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'successfully deleted'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => true,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 }
