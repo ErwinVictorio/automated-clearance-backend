@@ -118,5 +118,20 @@ class SubjectController extends Controller
     public function destroy(string $id)
     {
         //
+        try {
+            $subject = Subject::findOrFail($id);
+            $subject->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => "$subject->Subject_name is successfully deleted!"
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+
+            ]);
+        }
     }
 }

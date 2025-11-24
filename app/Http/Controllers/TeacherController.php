@@ -169,5 +169,21 @@ class TeacherController extends Controller
     public function destroy(string $id)
     {
         //
+
+        try {
+            $teacher = User::FindOrFail($id);
+
+            $teacher->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => "$teacher->full_name is successfully deleted!"
+            ]);
+        } catch (\Throwable $th) {
+            return response([
+                'success' => false,
+                'error' => $th->getMessage()
+            ], 500);
+        }
     }
 }

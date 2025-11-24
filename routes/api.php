@@ -36,8 +36,11 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(functi
     Route::get('/list-subject', [SubjectController::class, 'ShowToAdmin']);
     Route::get('/total-subject', [SubjectController::class, 'TotalSibject']);
     Route::get('/total-teacher', [TeacherController::class, 'TotalTeacher']);
+    Route::get('/get-students-by-teacher/{id}', [TeacherController::class, 'show']);
 
-    Route::get('/get-students-by-teacher/{id}',[TeacherController::class,'show']);
+    //  Deleting
+    Route::delete('/delete-teacher/{id}', [TeacherController::class, 'destroy']);
+    Route::delete('/delete-subject/{id}', [SubjectController::class, 'destroy']);
 });
 
 
