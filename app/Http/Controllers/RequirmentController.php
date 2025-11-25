@@ -91,7 +91,7 @@ class RequirmentController extends Controller
     public function showByTeacherId($teacherId)
     {
         try {
-            $list = RequirmentModel::select('title', 'detail', 'subject')
+            $list = RequirmentModel::select('title', 'detail', 'subject','deadline','id')
                 ->where('teacher_id', $teacherId)
                 ->get();
 
